@@ -9,52 +9,57 @@ class BlogRoll extends React.Component {
     const { edges: posts } = data.allMarkdownRemark
 
     return (
-      <div className="columns is-multiline">
+      <div className="post-feed">
         {posts &&
-          posts.map(({ node: post }) => (
-            <div className="is-parent column is-6" key={post.id}>
-              <article
-                className={`blog-list-item tile is-child box notification ${
-                  post.frontmatter.featuredpost ? 'is-featured' : ''
-                }`}
+        posts.map(({ node: post }) => (
+          <article
+            key={post.fields.slug}
+            className={`post-card ${
+              post.frontmatter.featuredpost ? 'is-featured' : ''
+              }`}
+          >
+            <Link
+              className="post-card-image-link"
+              to={post.fields.slug}
+            >
+              <PreviewCompatibleImage
+                imageInfo={{
+                  image: post.frontmatter.featuredimage,
+                  alt: `featured image thumbnail for post ${
+                    post.title
+                    }`,
+                }}
+              />
+            </Link>
+            <div className="post-card-content">
+              <Link
+                className="post-card-content-link"
+                to={post.fields.slug}
               >
-                <header>
-                  {post.frontmatter.featuredimage ? (
-                    <div className="featured-thumbnail">
-                      <PreviewCompatibleImage
-                        imageInfo={{
-                          image: post.frontmatter.featuredimage,
-                          alt: `featured image thumbnail for post ${
-                            post.title
-                          }`,
-                        }}
-                      />
-                    </div>
-                  ) : null}
-                  <p className="post-meta">
-                    <Link
-                      className="title has-text-primary is-size-4"
-                      to={post.fields.slug}
-                    >
-                      {post.frontmatter.title}
-                    </Link>
-                    <span> &bull; </span>
-                    <span className="subtitle is-size-5 is-block">
-                      {post.frontmatter.date}
-                    </span>
-                  </p>
+                <header className="post-card-header">
+                  <span className="post-card-tags">Getting Started</span>
+                  <h2 className="post-card-title">{post.frontmatter.title}</h2>
                 </header>
-                <p>
-                  {post.excerpt}
-                  <br />
-                  <br />
-                  <Link className="button" to={post.fields.slug}>
-                    Keep Reading →
-                  </Link>
-                </p>
-              </article>
+                <section className="post-card-excerpt">
+                  <p>{post.frontmatter.description}</p>
+                </section>
+              </Link>
+              <footer className="post-card-meta">
+                <ul className="author-list">
+                  <li className="author-list-item">
+                    <div className="author-name-tooltip">
+                      Ghost
+                    </div>
+                    <a href="/author/ghost" className="static-avatar ember-view">
+                      <img className="author-profile-image" src="/images/ghost-icon.png" alt="Ghost" />
+                    </a>
+                  </li>
+                </ul>
+                <span className="reading-time">3 min read</span>
+              </footer>
             </div>
-          ))}
+          </article>
+        ))}
       </div>
     )
   }
